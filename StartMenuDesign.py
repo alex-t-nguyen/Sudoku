@@ -70,6 +70,7 @@ def redraw_start_window():
     play.draw(window)
     difficulty.draw(window)
     quitter.draw(window)
+    instructions.draw(window)
 
     pygame.display.update()
 
@@ -86,6 +87,19 @@ def redraw_difficulty_window():
     easy.draw(window)
     medium.draw(window)
     hard.draw(window)
+
+def redraw_instructions_window():
+    """ Draws difficulty selector window """
+    # Create title text
+    text_title, text_rect = draw_title("Select a difficulty and click play", 20, LIGHT_BLUE)
+
+    text_title2, text_rect2 = draw_title("Double tap space to solve", 20, LIGHT_BLUE)
+
+    # Center title rectangle and add to center of display
+    text_rect.center = (win_width // 2, win_height // 5)
+    window.blit(text_title, text_rect)
+    text_rect2.center = (win_width // 2, win_height // 4)
+    window.blit(text_title2, text_rect2)
 
 
 def redraw_loading_screen():
@@ -116,7 +130,9 @@ def clear_window():
 # Start menu buttons
 play = Button(BLUE, (win_width // 3) - 25, (win_height // 4) + 50, 250, 60, 'Play')
 difficulty = Button(AQUA, win_width // 3, (win_height // 4) + 150, 200, 50, "Difficulty")
-quitter = Button(AQUA, (win_width // 3), (win_height // 4) + 240, 200, 50, "Quit")
+quitter = Button(AQUA, (win_width // 3), (win_height // 4) + 330, 200, 50, "Quit")
+instructions = Button(AQUA,(win_width // 3), (win_height // 4) + 240, 200, 50, "Instructions")
+
 
 # Difficulty select buttons
 easy = Button(BLUE, (win_width // 3), (win_height // 4) + 50, 200, 50, 'Easy')
@@ -128,6 +144,7 @@ def main():
     run = True
     on_start_window = True
     on_difficulty_window = False
+    on_instructions_window=False
     redraw_start_window()
     attempts_remove = 5  # Default difficulty set to "Easy"
     while run:
@@ -151,6 +168,10 @@ def main():
                         quitter.color = DARK_BLUE
                     else:
                         quitter.color = AQUA
+                    if instructions.is_over(pos):
+                        instructions.color=DARK_BLUE
+                    else:
+                        instructions.color=AQUA
                 if on_difficulty_window:
                     if easy.is_over(pos):
                         easy.color = DARK_BLUE
@@ -180,11 +201,21 @@ def main():
 
                         on_start_window = False
                         on_difficulty_window = True
+                        on_instructions_window=False
 
                         # Draw new screen (difficulty selector menu)
                         redraw_difficulty_window()
                         continue
-                    # Click quit button
+                    if instructions.is_over(pos):
+                        clear_window()
+
+                        on_start_window = False
+                        on_difficulty_window = False
+                        on_instructions_window = True
+
+                        # Draw new screen (difficulty selector menu)
+                        redraw_instructions_window()
+                        continue
                     if quitter.is_over(pos):
                         print('Quitting game')
                         run = False
@@ -204,14 +235,22 @@ def main():
                     # Change window flags to go back to start menu
                     on_start_window = True
                     on_difficulty_window = False
-
+                    on_instructions_window=False
                     # Clear window
                     clear_window()
+                if on_instructions_window:
+                    on_start_window = True
+                    on_difficulty_window = False
+                    on_instructions_window=False
+                    clear_window()
+
 
         if on_start_window:
             redraw_start_window()
         if on_difficulty_window:
             redraw_difficulty_window()
+        if on_instructions_window:
+            redraw_instructions_window()
         pygame.display.update()
 
     pygame.quit()

@@ -1,4 +1,5 @@
 import pygame
+import GUI
 pygame.init()
 
 # Define Colors
@@ -8,7 +9,7 @@ DARK_BLUE = (20, 52, 100)
 BLUE = (42, 121, 254)
 AQUA = (0, 236, 240)
 
-window = pygame.display.set_mode((600, 500))
+window = pygame.display.set_mode((540, 600))
 win_width, win_height = pygame.display.get_surface().get_size()
 pygame.display.set_caption("Sudoku")
 window.fill(WHITE)
@@ -116,7 +117,7 @@ def main():
     on_start_window = True
     on_difficulty_window = False
     redraw_start_window()
-
+    attempts_remove = 5  # Default difficulty set to "Easy"
     while run:
         for event in pygame.event.get():
             pos = pygame.mouse.get_pos()
@@ -155,6 +156,8 @@ def main():
                 if on_start_window:
                     if play.is_over(pos):
                         print('Starting game')
+                        print("Attempts remove: " + str(attempts_remove))
+                        GUI.main(attempts_remove)
                     if difficulty.is_over(pos):
                         print('Select difficulty')
 
@@ -173,13 +176,13 @@ def main():
                 if on_difficulty_window:
                     if easy.is_over(pos):
                         print('Easy difficulty')
-
+                        attempts_remove = 1
                     if medium.is_over(pos):
                         print('Medium difficulty')
-
+                        attempts_remove = 10
                     if hard.is_over(pos):
                         print('Hard difficulty')
-
+                        attempts_remove = 20
                     # Change window flags to go back to start menu
                     on_start_window = True
                     on_difficulty_window = False

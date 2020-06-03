@@ -1,6 +1,8 @@
 # Sudoku GUI
 
 import pygame
+
+import StartMenuDesign
 from SudokuSolve import is_valid_value, fill_board, find_empty, generate_board
 import time
 pygame.font.init()
@@ -258,8 +260,7 @@ def format_time(secs):
     return formatted_time
 
 
-def main():
-    attempts_remove = 5
+def main(attempts_remove):
     window = pygame.display.set_mode((540, 600))
     pygame.display.set_caption("Sudoku")
     # Make temporary grid with default empty board
@@ -277,12 +278,18 @@ def main():
     passed_time = 0
     clock = pygame.time.Clock()
 
+    quit_game = False
+
     while run:
         play_time = round(time.time() - start)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                StartMenuDesign.clear_window()
+                StartMenuDesign.redraw_start_window()
                 run = False
+                quit_game = True
+                break
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     key = 1
@@ -350,11 +357,8 @@ def main():
         if board.selected and key is not None:
             board.sketch_value(key)
 
-        # Draws board on load-up and updates upon inputs
-        redraw_window(window, board, play_time, strikes)
-        pygame.display.update()
+        if not quit_game:
+            # Draws board on load-up and updates upon inputs
+            redraw_window(window, board, play_time, strikes)
+            pygame.display.update()
 
-
-if __name__ == '__main__':
-    main()
-    pygame.quit()

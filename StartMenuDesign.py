@@ -88,6 +88,18 @@ def redraw_difficulty_window():
     hard.draw(window)
 
 
+def redraw_loading_screen():
+    """ Draws loading screen window """
+    window.fill(WHITE)
+    # Create title text
+    text_title, text_rect = draw_title("Generating Board...", 40, LIGHT_BLUE)
+
+    # Center title rectangle and add to center of display
+    text_rect.center = (win_width // 2, win_height // 2)
+    window.blit(text_title, text_rect)
+    pygame.display.update()
+
+
 def clear_window():
     """ Clear screen"""
     # Get background surface
@@ -154,10 +166,12 @@ def main():
                         hard.color = BLUE
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if on_start_window:
+                    # Click play button
                     if play.is_over(pos):
                         print('Starting game')
                         print("Attempts remove: " + str(attempts_remove))
                         GUI.main(attempts_remove)
+                    # Click difficulty selector button
                     if difficulty.is_over(pos):
                         print('Select difficulty')
 
@@ -170,16 +184,20 @@ def main():
                         # Draw new screen (difficulty selector menu)
                         redraw_difficulty_window()
                         continue
+                    # Click quit button
                     if quitter.is_over(pos):
                         print('Quitting game')
                         run = False
                 if on_difficulty_window:
+                    # Click easy difficulty button
                     if easy.is_over(pos):
                         print('Easy difficulty')
                         attempts_remove = 1
+                    # Click medium difficulty button
                     if medium.is_over(pos):
                         print('Medium difficulty')
                         attempts_remove = 10
+                    # Click hard difficulty button
                     if hard.is_over(pos):
                         print('Hard difficulty')
                         attempts_remove = 20

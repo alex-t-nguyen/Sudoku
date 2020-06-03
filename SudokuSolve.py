@@ -2,6 +2,7 @@
 # Adjacency list board
 import pygame
 import random
+from StartMenuDesign import redraw_loading_screen
 pygame.font.init()
 
 board2 = [
@@ -132,6 +133,7 @@ def generate_board(bo, attempts_remove):
     fill_board(bo)
 
     while attempts_remove > 0:
+        redraw_loading_screen()
         counter = [0]
         # Choose random cell on board
         x = random.randint(0, len(bo) - 1)
